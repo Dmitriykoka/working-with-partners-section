@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partner Management Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Управление партнерами</h1>
+            <div class="user-info">
+                <span id="current-user">Менеджер: Иванов И.</span>
+                <button id="logout-btn">Выйти</button>
+            </div>
+        </header>
+
+        <nav class="sidebar">
+            <ul>
+                <li class="active" data-section="dashboard"><i class="fas fa-home"></i> Дашборд</li>
+                <li data-section="calendar"><i class="fas fa-calendar-alt"></i> Календарь</li>
+                <li data-section="analytics"><i class="fas fa-chart-bar"></i> Аналитика</li>
+                <li data-section="settings"><i class="fas fa-cog"></i> Настройки</li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="filters">
+                    <select id="manager-filter">
+                        <option value="all">Все менеджеры</option>
+                        <option value="ivanov">Иванов И.</option>
+                        <option value="petrov">Петров А.</option>
+                    </select>
+                    
+                    <select id="status-filter">
+                        <option value="all">Все статусы</option>
+                        <option value="call">Нужно позвонить</option>
+                        <option value="planned">Запланировано</option>
+                        <option value="overdue">Просрочено</option>
+                        <option value="completed">Завершено</option>
+                    </select>
+                    
+                    <select id="priority-filter">
+                        <option value="all">Любая важность</option>
+                        <option value="high">Высокая</option>
+                        <option value="medium">Средняя</option>
+                        <option value="low">Низкая</option>
+                    </select>
+                    
+                    <select id="type-filter">
+                        <option value="all">Любой тип</option>
+                        <option value="planned">Плановый</option>
+                        <option value="unplanned">Внеплановый</option>
+                    </select>
+                    
+                    <button id="add-contact-btn">Добавить контакт</button>
+                </div>
+                
+                <div class="quick-actions">
+                    <button class="action-btn" id="complete-contact-btn">
+                        <i class="fas fa-check"></i> Отметить выполненным
+                    </button>
+                    <button class="action-btn" id="reschedule-contact-btn">
+                        <i class="fas fa-calendar-plus"></i> Перенести встречу
+                    </button>
+                </div>
+                
+                <div class="partners-list">
+                    <table id="partners-table">
+                        <thead>
+                            <tr>
+                                <th>Партнер</th>
+                                <th>Менеджер</th>
+                                <th>Статус</th>
+                                <th>Важность</th>
+                                <th>Тип</th>
+                                <th>Дата контакта</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="partners-table-body">
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Partner Card Section -->
+            <section id="partner-card-section" class="content-section">
+                <div class="partner-card">
+                    <button class="back-btn" id="back-to-dashboard"><i class="fas fa-arrow-left"></i> Назад</button>
+                    <div class="partner-info">
+                        <h2 id="partner-name">ООО "Технологии Будущего"</h2>
+                        <p><strong>Контактное лицо:</strong> <span id="contact-person">Сидоров П.А.</span></p>
+                        <p><strong>Телефон:</strong> <span id="contact-phone">+7 (123) 456-78-90</span></p>
+                        <p><strong>Email:</strong> <span id="contact-email">sidorov@futuretech.ru</span></p>
+                        <p><strong>Дата последнего контакта:</strong> <span id="last-contact-date">15.05.2023</span></p>
+                    </div>
+                    
+                    <div class="contact-history">
+                        <h3>История контактов</h3>
+                        <table id="contact-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Дата и время</th>
+                                    <th>Тип</th>
+                                    <th>Статус</th>
+                                    <th>Важность</th>
+                                    <th>Комментарий</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Filled by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="upcoming-contacts">
+                        <h3>Ближайшие контакты</h3>
+                        <div class="next-contact">
+                            <h4>Следующий плановый звонок</h4>
+                            <p id="next-planned-contact">20.05.2023, 14:00</p>
+                        </div>
+                        <div class="overdue-contacts">
+                            <h4>Просроченные контакты</h4>
+                            <ul id="overdue-contacts-list">
+                                <!-- Filled by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calendar Section -->
+            <section id="calendar-section" class="content-section">
+                <div class="calendar-header">
+                    <h2>Календарь контактов</h2>
+                    <div class="calendar-views">
+                        <button class="view-btn active" data-view="day">День</button>
+                        <button class="view-btn" data-view="week">Неделя</button>
+                        <button class="view-btn" data-view="month">Месяц</button>
+                    </div>
+                    <div class="calendar-navigation">
+                        <button id="prev-period"><i class="fas fa-chevron-left"></i></button>
+                        <h3 id="current-period">Май 2023</h3>
+                        <button id="next-period"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <div class="calendar-container">
+                    <div id="calendar-view">
+                        <!-- Calendar will be rendered here by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <span class="legend-color completed"></span>
+                        <span>Выполнено</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color planned"></span>
+                        <span>Запланировано</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color overdue"></span>
+                        <span>Просрочено</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color rescheduled"></span>
+                        <span>Перенесено</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="content-section">
+                <h2>Аналитика и отчетность</h2>
+                
+                <div class="analytics-filters">
+                    <select id="analytics-period">
+                        <option value="week">Неделя</option>
+                        <option value="month">Месяц</option>
+                        <option value="quarter">Квартал</option>
+                        <option value="year">Год</option>
+                    </select>
+                    
+                    <select id="analytics-manager">
+                        <option value="all">Все менеджеры</option>
+                        <option value="ivanov">Иванов И.</option>
+                        <option value="petrov">Петров А.</option>
+                    </select>
+                    
+                    <button id="generate-report">Сформировать отчет</button>
+                </div>
+                
+                <div class="analytics-charts">
+                    <div class="chart-container">
+                        <canvas id="contacts-by-status-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="contacts-by-priority-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="contacts-timeline-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="analytics-table">
+                    <table id="manager-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Менеджер</th>
+                                <th>Всего контактов</th>
+                                <th>Выполнено</th>
+                                <th>Просрочено</th>
+                                <th>% выполнения</th>
+                                <th>Среднее время реакции</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="add-contact-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Добавить новый контакт</h2>
+            <form id="add-contact-form">
+                <div class="form-group">
+                    <label for="contact-partner">Партнер:</label>
+                    <select id="contact-partner" required>
+                        <option value="">Выберите партнера</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact-type">Тип контакта:</label>
+                    <select id="contact-type" required>
+                        <option value="planned">Плановый</option>
+                        <option value="unplanned">Внеплановый</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact-priority">Важность:</label>
+                    <select id="contact-priority" required>
+                        <option value="high">Высокая</option>
+                        <option value="medium">Средняя</option>
+                        <option value="low">Низкая</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact-date">Дата и время:</label>
+                    <input type="datetime-local" id="contact-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact-notes">Заметки:</label>
+                    <textarea id="contact-notes" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="complete-contact-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Отметить контакт как выполненный</h2>
+            <form id="complete-contact-form">
+                <div class="form-group">
+                    <label for="completed-partner">Партнер:</label>
+                    <input type="text" id="completed-partner" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="completed-date">Фактическая дата и время:</label>
+                    <input type="datetime-local" id="completed-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact-method">Способ связи:</label>
+                    <select id="contact-method" required>
+                        <option value="phone">Телефон</option>
+                        <option value="email">Email</option>
+                        <option value="messenger">Мессенджер</option>
+                        <option value="meeting">Личная встреча</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="completed-notes">Комментарий:</label>
+                    <textarea id="completed-notes" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact-attachment">Прикрепить файл:</label>
+                    <input type="file" id="contact-attachment">
+                </div>
+                
+                <button type="submit" class="submit-btn">Подтвердить</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="reschedule-contact-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Перенести встречу</h2>
+            <form id="reschedule-contact-form">
+                <div class="form-group">
+                    <label for="reschedule-partner">Партнер:</label>
+                    <input type="text" id="reschedule-partner" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="original-date">Изначальная дата:</label>
+                    <input type="text" id="original-date" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-date">Новая дата и время:</label>
+                    <input type="datetime-local" id="new-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reschedule-reason">Причина переноса:</label>
+                    <textarea id="reschedule-reason" rows="3" required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Перенести</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/partners.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
