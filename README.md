@@ -1,1 +1,1 @@
-- [Посмотреть результат можно тут]([https://dmitriykoka.github.io/Device/](https://dmitriykoka.github.io/working-with-partners-section/))
+- [Посмотреть результат можно тут](https://dmitriykoka.github.io/working-with-partners-section/)
