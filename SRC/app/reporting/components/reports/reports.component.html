@@ -1,0 +1,95 @@
+<div class="reports-container">
+    <div class="filters">
+      <mat-form-field appearance="fill">
+        <mat-label>Менеджер</mat-label>
+        <mat-select [(ngModel)]="selectedManager" (selectionChange)="onManagerChange()">
+          <mat-option *ngFor="let manager of managers" [value]="manager.id">
+            {{ manager.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Начальная дата</mat-label>
+        <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="onDateRangeChange()">
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Конечная дата</mat-label>
+        <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="onDateRangeChange()">
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" (click)="generateReports()" [disabled]="isLoading">
+        <mat-icon>refresh</mat-icon> Обновить
+      </button>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading">
+      <mat-spinner></mat-spinner>
+      <p>Загрузка отчетов...</p>
+    </div>
+  
+    <div *ngIf="!isLoading" class="report-content">
+      <div class="metrics-grid">
+        <mat-card class="metric-card">
+          <mat-card-header>
+            <mat-card-title>Всего контактов</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="metric-value">{{ reports.totalContacts }}</div>
+          </mat-card-content>
+        </mat-card>
+  
+        <mat-card class="metric-card">
+          <mat-card-header>
+            <mat-card-title>Выполнено</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="metric-value">{{ reports.completedContacts }}</div>
+          </mat-card-content>
+        </mat-card>
+  
+        <mat-card class="metric-card">
+          <mat-card-header>
+            <mat-card-title>Пропущено</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="metric-value">{{ reports.missedContacts }}</div>
+          </mat-card-content>
+        </mat-card>
+  
+        <mat-card class="metric-card">
+          <mat-card-header>
+            <mat-card-title>Перенесено</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="metric-value">{{ reports.rescheduledContacts }}</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+  
+      <div class="charts-row">
+        <div class="chart-container">
+          <h3>Контакты по категориям</h3>
+          <canvas baseChart
+            [data]="contactsByCategoryChart"
+            [type]="chartType"
+            [options]="chartOptions">
+          </canvas>
+        </div>
+  
+        <div class="chart-container">
+          <h3>Запланировано vs Выполнено</h3>
+          <canvas baseChart
+            [data]="plannedVsActualChart"
+            [type]="chartType"
+            [options]="chartOptions">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>

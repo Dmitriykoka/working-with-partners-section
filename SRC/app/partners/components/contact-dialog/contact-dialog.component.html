@@ -1,0 +1,69 @@
+<h2 mat-dialog-title>
+    {{ isPlanned ? 'Запланировать контакт' : 'Добавить контакт' }}
+    {{ partner ? 'с ' + partner.name : '' }}
+  </h2>
+  
+  <mat-dialog-content>
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <mat-form-field appearance="fill" *ngIf="!partner">
+          <mat-label>Партнер</mat-label>
+          <input matInput formControlName="partnerId" required>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Дата контакта</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="contactDate" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-row" *ngIf="isPlanned">
+        <mat-form-field appearance="fill">
+          <mat-label>Плановая дата следующего контакта</mat-label>
+          <input matInput [matDatepicker]="plannedPicker" formControlName="plannedDate" required>
+          <mat-datepicker-toggle matSuffix [for]="plannedPicker"></mat-datepicker-toggle>
+          <mat-datepicker #plannedPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Метод контакта</mat-label>
+          <mat-select formControlName="contactMethod" required>
+            <mat-option *ngFor="let method of contactMethods" [value]="method">
+              {{ method }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Важность</mat-label>
+          <mat-select formControlName="importance" required>
+            <mat-option *ngFor="let level of importanceLevels" [value]="level.value">
+              {{ level.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+  
+      <div class="form-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Заметки</mat-label>
+          <textarea matInput formControlName="notes" rows="3"></textarea>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Отмена</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!contactForm.valid">
+      {{ isPlanned ? 'Запланировать' : 'Сохранить' }}
+    </button>
+  </mat-dialog-actions>
