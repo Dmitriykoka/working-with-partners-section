@@ -1,1 +1,0 @@
-- [Посмотреть результат можно тут](https://dmitriykoka.github.io/working-with-partners-section/)
