@@ -376,11 +376,11 @@ function completeContact(contactId) {
 }
 
 // Вспомогательная функция для форматирования даты
-function formatDate(date) {
+/*function formatDate(date) {
     return date.toLocaleDateString('ru-RU', {
         day: 'numeric',
         month: 'long',
         year: 'numeric'
     });
-}
+}*/
 export { initCalendar };

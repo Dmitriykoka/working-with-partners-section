@@ -3,14 +3,24 @@ import { initContacts } from './contacts.js';
 import { initCalendar } from './calendar.js';
 import { initReports } from './reports.js';
 
-document.addEventListener('DOMContentLoaded', function() {
-    initPartners();
-    initContacts();
-    initCalendar();
-    initReports();
+let isInitialized = false;
+
+document.addEventListener('DOMContentLoaded', async function() {
+    if (isInitialized) return;
     
-    setupNavigation();
-    setupModals();
+    try {
+        await initPartners();
+        await initContacts();
+        await initCalendar();
+        await initReports();
+        
+        setupNavigation();
+        setupModals();
+        isInitialized = true;
+    } catch (error) {
+        console.error('Ошибка при инициализации приложения:', error);
+        alert('Произошла ошибка при загрузке приложения. Пожалуйста, обновите страницу.');
+    }
 });
 
 function setupNavigation() {
@@ -25,20 +35,19 @@ function setupNavigation() {
             });
             
             const sectionId = this.getAttribute('data-section') + '-section';
-            document.getElementById(sectionId).classList.add('active');
+            const section = document.getElementById(sectionId);
+            if (section) section.classList.add('active');
         });
     });
 }
 
 function setupModals() {
-    // Закрытие модальных окон
     document.querySelectorAll('.close-modal').forEach(btn => {
         btn.addEventListener('click', function() {
             hideModal(this.closest('.modal'));
         });
     });
     
-    // Клик вне модального окна
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', function(e) {
             if (e.target === this) {
@@ -66,18 +75,3 @@ function hideModal(modal) {
 // Глобальные функции для использования в других модулях
 window.showModal = showModal;
 window.hideModal = hideModal;
-
-document.addEventListener('DOMContentLoaded', async function() {
-    try {
-        await initPartners();
-        await initContacts();
-        await initCalendar();
-        await initReports();
-        
-        setupNavigation();
-        setupModals();
-    } catch (error) {
-        console.error('Ошибка при инициализации приложения:', error);
-        alert('Произошла ошибка при загрузке приложения. Пожалуйста, обновите страницу.');
-    }
-});
